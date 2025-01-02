@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+
+  airflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: airflow_container
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////usr/local/airflow/airflow.db  # Default SQLite database, can be changed later
+      - SQLALCHEMY_WARN_20=1 
+      - SQLALCHEMY_SILENCE_UBER_WARNING=1  
+      - AIRFLOW__WEBSERVER__AUTHENTICATE=True   
+      - AIRFLOW__WEBSERVER__AUTH_BACKEND=airflow.contrib.auth.backends.password_auth 
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=mongodb://mongodb:27017/agri.agriculture  # Updated MongoDB connection string
+    volumes:
+      - ./dags:/opt/airflow/dags    
+      - ./data:/opt/airflow/data    
+      - ./logs:/opt/airflow/logs    
+      - ./plugins:/opt/airflow/plugins   
+      - ./airflow_db:/usr/local/airflow  
+    ports:
+      - "8082:8080"
+    networks:
+      - airflow_mongo_network  # Ensure the network is defined here
+    command: >
+      bash -c "
+      airflow db init &&
+      airflow webserver --port 8080 &
+      airflow scheduler"
+
+volumes:
+  mongo_data:  # Ensure that MongoDB volume is created if not already present
+
+networks:
+  airflow_mongo_network:
+    external: true  # This allows Airflow to connect to the existing MongoDB container's network

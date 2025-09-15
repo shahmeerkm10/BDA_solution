@@ -1,6 +1,10 @@
 # BDA_solution
 A big data solution for agricultural and soil data completely dockerized.
 
+The following project was completed in collaboration with fellow IBA stuents, Mohammad Saim Khalid and Mohammad Mashhood.
+
+This project serves as a part of the Big Data Analysis course delivered by Sir Tariq Mehmood, a lecturer at IBA Karachi.
+
 -This solution caters for big data (over 2GBs) and includes everything from ingestion to storage to preprocessing and finally dashboarding of the dataset.
 
 -Dataset URL:
